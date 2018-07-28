@@ -58,8 +58,40 @@ view : Model -> Html Msg
 view model =
     main_ []
         [ section [ class "jumbotron full-screen flex-column-evenly-center" ]
-            (welcome model)
+            -- (welcome model)
+            (question model)
         ]
+
+
+question : Model -> List (Html Msg)
+question question =
+    [ h2 [] [ text "What is 1 + 2?" ]
+    , div [ class "container l3" ]
+        [ div [ class "question" ]
+            [ div [ class "form-check" ]
+                [ input [ type_ "radio", class "form-check-input", id "1" ] []
+                , label [ class "form-check-label", for "1" ] [ text "1" ]
+                ]
+            , div [ class "form-check" ]
+                [ input [ type_ "radio", class "form-check-input", id "2" ] []
+                , label [ class "form-check-label", for "2" ] [ text "2" ]
+                ]
+            , div [ class "form-check" ]
+                [ input [ type_ "radio", class "form-check-input", id "3" ] []
+                , label [ class "form-check-label", for "3" ] [ text "3" ]
+                ]
+            , div [ class "form-check" ]
+                [ input [ type_ "radio", class "form-check-input", id "4" ] []
+                , label [ class "form-check-label", for "4" ] [ text "Well you see, it depends man. Everything is relative and there is no certain knowledge in the world and stuff..." ]
+                ]
+            ]
+        ]
+    , div
+        [ class "actions" ]
+        [ button [ class "btn btn-secondary" ] [ text "Previous" ]
+        , button [ class "btn btn-secondary pull-right" ] [ text "Next" ]
+        ]
+    ]
 
 
 welcome : { email : email } -> List (Html Msg)
