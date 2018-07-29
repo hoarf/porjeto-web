@@ -2,10 +2,12 @@ module Main exposing (..)
 
 -- component import example
 
-import Components.Hello exposing (hello)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Msg exposing (..)
+import Question exposing (..)
+import Questionaire exposing (..)
+import User exposing (..)
 
 
 -- APP
@@ -13,31 +15,23 @@ import Html.Events exposing (onClick)
 
 main : Program Never Model Msg
 main =
-    Html.beginnerProgram { model = model, view = view, update = update }
+    Html.beginnerProgram { model = NotLoaded, view = view, update = update }
 
 
 
 -- MODEL
 
 
-type alias Model =
-    { email : String
-    }
-
-
-model : Model
-model =
-    { email = ""
-    }
+type Model
+    = NotLoaded
+    | Loaded Questionaire
+    | Ready User Questionaire
+    | Answering User Question Questionaire
+    | Finished User
 
 
 
 -- UPDATE
-
-
-type Msg
-    = NoOp
-    | Increment
 
 
 update : Msg -> Model -> Model
@@ -56,42 +50,21 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
+    let
+        nonSharedView =
+            case model of
+                Answering user question questionaire ->
+                    div []
+                        [ Question.view question
+                        , Questionaire.actions questionaire
+                        ]
+
+                _ ->
+                    div [] []
+    in
     main_ []
-        [ section [ class "jumbotron full-screen flex-column-evenly-center" ]
-            -- (welcome model)
-            (question model)
+        [ section [ class "jumbotron full-screen flex-column-evenly-center" ] [ nonSharedView ]
         ]
-
-
-question : Model -> List (Html Msg)
-question question =
-    [ h2 [] [ text "What is 1 + 2?" ]
-    , div [ class "container l3" ]
-        [ div [ class "question" ]
-            [ div [ class "form-check" ]
-                [ input [ type_ "radio", class "form-check-input", id "1" ] []
-                , label [ class "form-check-label", for "1" ] [ text "1" ]
-                ]
-            , div [ class "form-check" ]
-                [ input [ type_ "radio", class "form-check-input", id "2" ] []
-                , label [ class "form-check-label", for "2" ] [ text "2" ]
-                ]
-            , div [ class "form-check" ]
-                [ input [ type_ "radio", class "form-check-input", id "3" ] []
-                , label [ class "form-check-label", for "3" ] [ text "3" ]
-                ]
-            , div [ class "form-check" ]
-                [ input [ type_ "radio", class "form-check-input", id "4" ] []
-                , label [ class "form-check-label", for "4" ] [ text "Well you see, it depends man. Everything is relative and there is no certain knowledge in the world and stuff..." ]
-                ]
-            ]
-        ]
-    , div
-        [ class "actions" ]
-        [ button [ class "btn btn-secondary" ] [ text "Previous" ]
-        , button [ class "btn btn-secondary pull-right" ] [ text "Next" ]
-        ]
-    ]
 
 
 welcome : { email : email } -> List (Html Msg)
