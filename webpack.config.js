@@ -121,8 +121,8 @@ if (isProd === true) {
                 minimize: true,
                 compressor: {
                     warnings: false
-                }
-                // mangle:  true
+                },
+                mangle:  true
             })
         ]
     });
