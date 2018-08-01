@@ -1,24 +1,8 @@
-module Questionaire exposing (Questionaire, actions, defaultQuestionaire)
+module Questionaire exposing (actions)
 
 import Html exposing (..)
 import Msg exposing (..)
-
-
-type Progress
-    = NotStarted
-    | FirstQuestion
-    | InTheMiddleOfIt
-    | LastQuestion
-
-
-type alias Questionaire =
-    { progress : Progress }
-
-
-defaultQuestionaire : Questionaire
-defaultQuestionaire =
-    { progress = NotStarted }
-
+import Types exposing (..)
 
 
 -- VIEWS

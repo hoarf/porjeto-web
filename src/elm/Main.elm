@@ -7,6 +7,8 @@ import Html.Attributes exposing (..)
 import Msg exposing (..)
 import Question exposing (..)
 import Questionaire exposing (..)
+import Task exposing (..)
+import Types exposing (..)
 import User exposing (..)
 
 
@@ -15,7 +17,12 @@ import User exposing (..)
 
 main : Program Never Model Msg
 main =
-    Html.beginnerProgram { model = NotLoaded, view = view, update = update }
+    Html.program
+        { view = view
+        , update = update
+        , init = NotLoaded ! [ show NotLoaded ]
+        , subscriptions = \m -> Sub.none
+        }
 
 
 
@@ -30,29 +37,40 @@ type Model
     | Finished User
 
 
+show : Model -> Cmd Msg
+show model =
+    Task.perform QuestionairieHttpRequest (Task.succeed (Ok { progress = FirstQuestion }))
+
+
 
 -- UPDATE
 
 
-update : Msg -> Model -> Model
+update : Msg.Msg -> Model -> ( Model, Cmd Msg.Msg )
 update msg model =
     case msg of
         NoOp ->
-            model
+            model ! []
 
-        Increment ->
-            model
+        QuestionairieHttpRequest (Ok a) ->
+            Loaded a ! []
+
+        QuestionairieHttpRequest (Err a) ->
+            model ! []
 
 
 
 -- VIEW
 
 
-view : Model -> Html Msg
+view : Model -> Html Msg.Msg
 view model =
     let
         nonSharedView =
             case model of
+                NotLoaded ->
+                    div [] [ text "Loading Questionaire..." ]
+
                 Answering user question questionaire ->
                     div []
                         [ Question.view question
@@ -67,7 +85,7 @@ view model =
         ]
 
 
-welcome : { email : email } -> List (Html Msg)
+welcome : { email : email } -> List (Html Msg.Msg)
 welcome email =
     [ h2 [] [ text "Before we begin, please tell me your email" ]
     , h3 [] [ text "It will only be used as an identifier. I am not gonna spam you =)" ]

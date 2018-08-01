@@ -1,6 +1,9 @@
 module Msg exposing (..)
 
+import Http
+import Types exposing (..)
+
 
 type Msg
     = NoOp
-    | Increment
+    | QuestionairieHttpRequest (Result Http.Error Questionaire)
