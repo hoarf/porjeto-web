@@ -1,9 +1,13 @@
 module Msg exposing (..)
 
 import Http
-import Types exposing (..)
+import Questionnaire exposing (..)
 
 
 type Msg
     = NoOp
-    | QuestionairieHttpRequest (Result Http.Error Questionaire)
+    | NextQuestion
+    | PreviousQuestion
+    | BeginQuestionnaire
+    | FinishQuestionnaire
+    | QuestionairieHttpRequest (Result Http.Error Questionnaire)
