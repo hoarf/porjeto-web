@@ -5,11 +5,13 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Msg exposing (..)
-import Question exposing (..)
-import Questionaire exposing (..)
+import Questionnaire exposing (..)
 import Task exposing (..)
-import Types exposing (..)
 import User exposing (..)
+import Views.Other exposing (..)
+import Views.Question exposing (..)
+import Views.Questionnaire exposing (..)
+import Views.User exposing (..)
 
 
 -- APP
@@ -31,15 +33,15 @@ main =
 
 type Model
     = NotLoaded
-    | Loaded Questionaire
-    | Ready User Questionaire
-    | Answering User Question Questionaire
+    | Loaded User Questionnaire
+    | Ready User Questionnaire
+    | Answering User Questionnaire
     | Finished User
 
 
 show : Model -> Cmd Msg
 show model =
-    Task.perform QuestionairieHttpRequest (Task.succeed (Ok { progress = FirstQuestion }))
+    Task.perform QuestionairieHttpRequest (Task.succeed (Ok defaultQuestionnaire))
 
 
 
@@ -53,7 +55,7 @@ update msg model =
             model ! []
 
         QuestionairieHttpRequest (Ok a) ->
-            Loaded a ! []
+            Loaded defaultUser a ! []
 
         QuestionairieHttpRequest (Err a) ->
             model ! []
@@ -69,19 +71,25 @@ view model =
         nonSharedView =
             case model of
                 NotLoaded ->
-                    div [] [ text "Loading Questionaire..." ]
+                    div [] [ text "Loading Questionnaire..." ]
 
-                Answering user question questionaire ->
+                Loaded user questionnaire ->
+                    Views.User.default user
+
+                Ready user questionnaire ->
+                    Views.User.default user
+
+                Answering user questionnaire ->
                     div []
-                        [ Question.view question
-                        , Questionaire.actions questionaire
+                        [ Views.Question.default questionnaire.current
+                        , Views.Questionnaire.actions questionnaire
                         ]
 
                 _ ->
                     div [] []
     in
     main_ []
-        [ section [ class "jumbotron full-screen flex-column-evenly-center" ] [ nonSharedView ]
+        [ section [ class "full-screen flex-column-evenly-center" ] [ nonSharedView ]
         ]
 
 
