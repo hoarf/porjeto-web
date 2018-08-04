@@ -10,33 +10,44 @@ import Msg exposing (..)
 import User exposing (..)
 
 
-default : User -> Html Msg
-default user =
-    Options.div []
-        [ Options.div []
-            [ p [] [ text "Thanks for doing this. I really appreciate it. Before we begin I need you to input your email. Don't worry, I am not going to send you any span, this is just for identification purposes." ]
+actions : User -> Html Msg
+actions user =
+    Options.div [ Options.cs "actions user" ]
+        [ Button.render Mdl
+            [ 1 ]
+            user.mdl
+            [ Button.raised
+            , Button.ripple
+            , Button.colored
+            , Options.cs "pull-end"
+            , Options.onClick BeginQuestionnaire
+            , Button.disabled |> Options.when (User.isNotReady user)
             ]
-        , Options.div
-            [ Options.cs "flex-column-evenly-center" ]
-            [ Textfield.render Mdl
-                [ 0 ]
-                user.mdl
-                [ Textfield.label "E-mail"
-                , Textfield.floatingLabel
-                , Textfield.email
-                , Textfield.autofocus
-                , Options.onInput UserChanged
-                ]
-                []
-            , Button.render Mdl
-                [ 1 ]
-                user.mdl
-                [ Button.raised
-                , Button.ripple
-                , Button.colored
-                , Options.cs "pull-end"
-                , Button.disabled |> Options.when (User.isNotReady user)
-                ]
-                [ text "Begin Questionnaire" ]
-            ]
+            [ text "Begin Questionnaire" ]
         ]
+
+
+form : User -> Html Msg
+form user =
+    Options.div [ Options.cs "content" ]
+        [ p [] [ text welcome ]
+        , Textfield.render Mdl
+            [ 0 ]
+            user.mdl
+            [ Textfield.label "Email"
+            , Textfield.floatingLabel
+            , Textfield.email
+            , Textfield.autofocus
+            , Options.onInput UserChanged
+            ]
+            []
+        ]
+
+
+welcome : String
+welcome =
+    """
+    Hey! Thank you very much for being a part of this, I really appreciate it.
+    I need a way to identify users so I'm asking for your e-mail here.
+    Do not worry, I am not going to spam you or anything.
+    """
