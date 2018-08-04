@@ -3,20 +3,13 @@ module Main exposing (..)
 -- component import example
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
 import Material
-import Material.Progress as Loading
 import Model exposing (..)
 import Msg exposing (..)
 import Questionnaire exposing (..)
 import Task exposing (..)
-import Tuple exposing (..)
 import User exposing (..)
 import Views.Model exposing (..)
-import Views.Other exposing (..)
-import Views.Question exposing (..)
-import Views.Questionnaire exposing (..)
-import Views.User exposing (..)
 
 
 -- APP
