@@ -10,9 +10,4 @@ import Questionnaire exposing (..)
 
 actions : { a | progress : Progress } -> Html Msg
 actions questionnaire =
-    case questionnaire.progress of
-        NotStarted ->
-            div [] []
-
-        _ ->
-            div [] [ text "hahah" ]
+    div [] []
