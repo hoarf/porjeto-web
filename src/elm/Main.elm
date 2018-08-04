@@ -12,6 +12,7 @@ import Questionnaire exposing (..)
 import Task exposing (..)
 import Tuple exposing (..)
 import User exposing (..)
+import Views.Model exposing (..)
 import Views.Other exposing (..)
 import Views.Question exposing (..)
 import Views.Questionnaire exposing (..)
@@ -63,7 +64,7 @@ update msg model =
             model ! []
 
         BeginQuestionnaire ->
-            model ! []
+            Model.beginQuestionnaire model ! []
 
         FinishQuestionnaire ->
             model ! []
@@ -76,7 +77,7 @@ update msg model =
             Model.setUser model newUser ! [ cmds ]
 
         UserChanged email ->
-            Model.applyUser (User.updateEmail email) model ! []
+            Model.updateEmail model email ! []
 
 
 
@@ -85,27 +86,8 @@ update msg model =
 
 view : Model -> Html Msg.Msg
 view model =
-    let
-        nonSharedView =
-            case model of
-                NotLoaded ->
-                    Loading.indeterminate
-
-                Loaded user questionnaire ->
-                    Views.User.default user
-
-                Ready user questionnaire ->
-                    Views.User.default user
-
-                Answering user questionnaire ->
-                    div []
-                        [ Views.Question.default questionnaire.current
-                        , Views.Questionnaire.actions questionnaire
-                        ]
-
-                _ ->
-                    div [] []
-    in
     main_ []
-        [ section [ class "full-screen flex-column-evenly-center" ] [ nonSharedView ]
+        [ Views.Model.title model
+        , Views.Model.content model
+        , Views.Model.actions model
         ]
