@@ -4,9 +4,13 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Material
+import Material.Progress as Loading
+import Model exposing (..)
 import Msg exposing (..)
 import Questionnaire exposing (..)
 import Task exposing (..)
+import Tuple exposing (..)
 import User exposing (..)
 import Views.Other exposing (..)
 import Views.Question exposing (..)
@@ -31,14 +35,6 @@ main =
 -- MODEL
 
 
-type Model
-    = NotLoaded
-    | Loaded User Questionnaire
-    | Ready User Questionnaire
-    | Answering User Questionnaire
-    | Finished User
-
-
 show : Model -> Cmd Msg
 show model =
     Task.perform QuestionairieHttpRequest (Task.succeed (Ok defaultQuestionnaire))
@@ -55,10 +51,32 @@ update msg model =
             model ! []
 
         QuestionairieHttpRequest (Ok a) ->
-            Loaded defaultUser a ! []
+            Loaded User.default a ! []
 
         QuestionairieHttpRequest (Err a) ->
             model ! []
+
+        NextQuestion ->
+            model ! []
+
+        PreviousQuestion ->
+            model ! []
+
+        BeginQuestionnaire ->
+            model ! []
+
+        FinishQuestionnaire ->
+            model ! []
+
+        Mdl message_ ->
+            let
+                ( newUser, cmds ) =
+                    Material.update Mdl message_ (Model.getUser model)
+            in
+            Model.setUser model newUser ! [ cmds ]
+
+        UserChanged email ->
+            Model.applyUser (User.updateEmail email) model ! []
 
 
 
@@ -71,7 +89,7 @@ view model =
         nonSharedView =
             case model of
                 NotLoaded ->
-                    div [] [ text "Loading Questionnaire..." ]
+                    Loading.indeterminate
 
                 Loaded user questionnaire ->
                     Views.User.default user
@@ -91,17 +109,3 @@ view model =
     main_ []
         [ section [ class "full-screen flex-column-evenly-center" ] [ nonSharedView ]
         ]
-
-
-welcome : { email : email } -> List (Html Msg.Msg)
-welcome email =
-    [ h2 [] [ text "Before we begin, please tell me your email" ]
-    , h3 [] [ text "It will only be used as an identifier. I am not gonna spam you =)" ]
-    , div [ class "container l3" ]
-        [ div [ class "form-group" ]
-            [ label [] [ text "Email" ]
-            , input [ type_ "email", class "form-control" ] []
-            ]
-        , button [ type_ "submit", class "btn btn-primary pull-right" ] [ text "Begin" ]
-        ]
-    ]
