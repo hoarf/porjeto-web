@@ -91,17 +91,3 @@ view model =
     main_ []
         [ section [ class "full-screen flex-column-evenly-center" ] [ nonSharedView ]
         ]
-
-
-welcome : { email : email } -> List (Html Msg.Msg)
-welcome email =
-    [ h2 [] [ text "Before we begin, please tell me your email" ]
-    , h3 [] [ text "It will only be used as an identifier. I am not gonna spam you =)" ]
-    , div [ class "container l3" ]
-        [ div [ class "form-group" ]
-            [ label [] [ text "Email" ]
-            , input [ type_ "email", class "form-control" ] []
-            ]
-        , button [ type_ "submit", class "btn btn-primary pull-right" ] [ text "Begin" ]
-        ]
-    ]
