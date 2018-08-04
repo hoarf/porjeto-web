@@ -1,36 +1,24 @@
-.flex-column-evenly-center
-  display: flex
-  flex-direction: column
-  justify-content: space-evenly
-  align-items: center
-
-.flex-row-between
-  display: flex
-  flex-direction: row
-  justify-content: space-around
-
-.container
-  margin: auto
+main
+  width: 60vw
+  margin: 100px auto 20px auto
 
 section
-  @extend .container
-  width: 80vw
+  display: flex
+  flex-direction: column
+  justify-content: center
 
-.container.l3
-  background-color: white
-  padding: 200px 200px
-  width: 40vw
+.content
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
 
-.full-screen
-  min-height: 100vh
+.actions
+  display: flex
+  flex-direction: row
+
+  &.user
+    justify-content: flex-end
 
 .pull-end
   align-self: flex-end
-
-.question
-  padding: 50px 0 50px 0
-
-.actions
-  @extend .flex-row-between
-  padding: 30px
-  width: 80%

@@ -14,6 +14,7 @@ type alias Question =
     , answer5 : Answer
     , selected : Maybe Answer
     , seconds : Int
+    , order : Int
     }
 
 
@@ -27,4 +28,5 @@ defaultQuestion =
     , answer5 = Answer ""
     , selected = Nothing
     , seconds = 0
+    , order = 0
     }

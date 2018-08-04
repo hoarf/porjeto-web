@@ -1,4 +1,4 @@
-module User exposing (User, default, isNotReady, updateEmail)
+module User exposing (User, default, isNotReady, isReady, updateEmail)
 
 import Material
 import Regex exposing (Regex)
@@ -17,14 +17,21 @@ default =
     }
 
 
-isInValid : User -> Bool
-isInValid user =
+isInvalid : User -> Bool
+isInvalid user =
     not <| Regex.contains validEmail user.email
 
 
 isNotReady : User -> Bool
 isNotReady user =
-    isInValid user
+    isInvalid user
+
+
+isReady : User -> Bool
+isReady user =
+    user
+        |> isInvalid
+        |> not
 
 
 updateEmail : String -> User -> User

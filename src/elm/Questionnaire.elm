@@ -4,8 +4,7 @@ import Question exposing (..)
 
 
 type Progress
-    = NotStarted
-    | FirstQuestion
+    = FirstQuestion
     | InTheMiddleOfIt
     | LastQuestion
 
@@ -20,7 +19,7 @@ type alias Questionnaire =
 
 defaultQuestionnaire : Questionnaire
 defaultQuestionnaire =
-    { progress = NotStarted
+    { progress = FirstQuestion
     , previous = []
     , current = defaultQuestion
     , next = []
