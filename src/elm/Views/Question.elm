@@ -1,7 +1,6 @@
 module Views.Question exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
 import Material
 import Material.List as Lists
 import Material.Options as Options
