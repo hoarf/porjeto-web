@@ -1,7 +1,6 @@
 module Main exposing (..)
 
--- component import example
-
+import Config
 import Html exposing (..)
 import Material
 import Model exposing (..)
@@ -31,7 +30,7 @@ main =
 
 show : Model -> Cmd Msg
 show model =
-    Task.perform QuestionairieHttpRequest (Task.succeed (Ok defaultQuestionnaire))
+    Task.perform QuestionairieHttpRequest (Task.succeed (Ok Questionnaire.default))
 
 
 
@@ -45,7 +44,7 @@ update msg model =
             model ! []
 
         QuestionairieHttpRequest (Ok a) ->
-            Loaded User.default a ! []
+            Answering User.default a Config.default ! []
 
         QuestionairieHttpRequest (Err a) ->
             model ! []
@@ -64,10 +63,10 @@ update msg model =
 
         Mdl message_ ->
             let
-                ( newUser, cmds ) =
-                    Material.update Mdl message_ (Model.getUser model)
+                ( newConfig, cmds ) =
+                    Material.update Mdl message_ (Model.getConfig model)
             in
-            Model.setUser model newUser ! [ cmds ]
+            Model.setConfig model newConfig ! [ cmds ]
 
         UserChanged email ->
             Model.updateEmail model email ! []
