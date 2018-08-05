@@ -2,6 +2,10 @@ module Views.Question exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Material
+import Material.List as Lists
+import Material.Options as Options
+import Material.Toggles as Toggles
 import Msg exposing (..)
 import Question exposing (..)
 
@@ -9,24 +13,26 @@ import Question exposing (..)
 -- VIEWS
 
 
-default : Question -> Html Msg
-default question =
-    div []
-        [ h2 [] [ text "What is 1 + 2?" ]
-        , div [ class "container l3" ]
-            [ div [ class "question" ]
-                [ div [ class "form-check" ]
-                    [ input [ type_ "radio", class "form-check-input", id "1" ] [ label [ class "form-check-label", for "1" ] [ text "1" ] ]
-                    ]
-                , div [ class "form-check" ]
-                    [ input [ type_ "radio", class "form-check-input", id "2" ] [ label [ class "form-check-label", for "2" ] [ text "2" ] ]
-                    ]
-                , div [ class "form-check" ]
-                    [ input [ type_ "radio", class "form-check-input", id "3" ] [ label [ class "form-check-label", for "3" ] [ text "3" ] ]
-                    ]
-                , div [ class "form-check" ]
-                    [ input [ type_ "radio", class "form-check-input", id "4" ] [ label [ class "form-check-label", for "4" ] [ text "Well you see, it depends man. Everything is relative and there is no certain knowledge in the world and stuff..." ] ]
-                    ]
-                ]
+view : Question -> Material.Model -> Html Msg
+view question mdl =
+    Options.div []
+        [ h3 [] [ text question.description ]
+        , Lists.ul []
+            [ Lists.li [] [ Lists.content [] [ checkbox_ 1 question.answer1 mdl ] ]
+            , Lists.li [] [ Lists.content [] [ checkbox_ 2 question.answer2 mdl ] ]
+            , Lists.li [] [ Lists.content [] [ checkbox_ 3 question.answer3 mdl ] ]
+            , Lists.li [] [ Lists.content [] [ checkbox_ 4 question.answer4 mdl ] ]
+            , Lists.li [] [ Lists.content [] [ checkbox_ 5 question.answer5 mdl ] ]
             ]
         ]
+
+
+checkbox_ : Int -> Answer -> Material.Model -> Html Msg
+checkbox_ ix (Answer text_) mdl =
+    Toggles.checkbox Mdl
+        [ ix ]
+        mdl
+        [ Toggles.ripple
+        , Toggles.value True
+        ]
+        [ text text_ ]

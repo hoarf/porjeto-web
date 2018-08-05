@@ -1,19 +1,16 @@
 module User exposing (User, default, isNotReady, isReady, updateEmail)
 
-import Material
 import Regex exposing (Regex)
 
 
 type alias User =
     { email : String
-    , mdl : Material.Model
     }
 
 
 default : User
 default =
     { email = ""
-    , mdl = Material.model
     }
 
 

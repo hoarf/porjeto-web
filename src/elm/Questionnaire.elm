@@ -1,4 +1,4 @@
-module Questionnaire exposing (Progress(..), Questionnaire, defaultQuestionnaire)
+module Questionnaire exposing (Progress(..), Questionnaire, default)
 
 import Question exposing (..)
 
@@ -6,6 +6,7 @@ import Question exposing (..)
 type Progress
     = FirstQuestion
     | InTheMiddleOfIt
+    | SingleQuestion
     | LastQuestion
 
 
@@ -17,10 +18,10 @@ type alias Questionnaire =
     }
 
 
-defaultQuestionnaire : Questionnaire
-defaultQuestionnaire =
-    { progress = FirstQuestion
+default : Questionnaire
+default =
+    { progress = SingleQuestion
     , previous = []
-    , current = defaultQuestion
+    , current = Question.default
     , next = []
     }

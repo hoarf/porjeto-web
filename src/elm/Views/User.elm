@@ -1,7 +1,6 @@
 module Views.User exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
 import Html.Events.Extra exposing (..)
 import Material
 import Material.Button as Button
@@ -11,12 +10,12 @@ import Msg exposing (..)
 import User exposing (..)
 
 
-actions : User -> Html Msg
-actions user =
-    Options.div [ Options.cs "actions user" ]
+actions : User -> Material.Model -> Html Msg
+actions user mdl =
+    Options.div [ Options.cs "actions one" ]
         [ Button.render Mdl
             [ 1 ]
-            user.mdl
+            mdl
             [ Button.raised
             , Button.ripple
             , Button.colored
@@ -28,13 +27,13 @@ actions user =
         ]
 
 
-form : User -> Html Msg
-form user =
+form : User -> Material.Model -> Html Msg
+form user mdl =
     Options.div [ Options.cs "content" ]
         [ p [] [ text welcome ]
         , Textfield.render Mdl
             [ 0 ]
-            user.mdl
+            mdl
             [ Textfield.label "Email"
             , Textfield.floatingLabel
             , Textfield.email
