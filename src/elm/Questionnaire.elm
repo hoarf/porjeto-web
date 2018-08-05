@@ -1,4 +1,4 @@
-module Questionnaire exposing (Progress(..), Questionnaire, default, next, previous)
+module Questionnaire exposing (Progress(..), Questionnaire, default, next, previous, updateAnswer)
 
 import Question exposing (..)
 
@@ -113,3 +113,8 @@ previous questionnaire =
 
         _ ->
             questionnaire
+
+
+updateAnswer : Questionnaire -> Question -> Int -> Bool -> Questionnaire
+updateAnswer questionnaire question ix value =
+    questionnaire
