@@ -53,7 +53,7 @@ next questionnaire =
                 |> Maybe.map identity
                 |> Maybe.withDefault []
 
-        newQuestionnarie =
+        newQuestionnaire =
             { progress = newProgress
             , previous = newPrevious
             , current = newCurrent
@@ -62,10 +62,10 @@ next questionnaire =
     in
     case questionnaire.progress of
         FirstQuestion ->
-            newQuestionnarie
+            newQuestionnaire
 
         InTheMiddleOfIt ->
-            newQuestionnarie
+            newQuestionnaire
 
         _ ->
             questionnaire
@@ -97,7 +97,7 @@ previous questionnaire =
                 |> Maybe.map identity
                 |> Maybe.withDefault []
 
-        newQuestionnarie =
+        newQuestionnaire =
             { progress = newProgress
             , previous = newPrevious
             , current = newCurrent
@@ -106,10 +106,10 @@ previous questionnaire =
     in
     case questionnaire.progress of
         LastQuestion ->
-            newQuestionnarie
+            newQuestionnaire
 
         InTheMiddleOfIt ->
-            newQuestionnarie
+            newQuestionnaire
 
         _ ->
             questionnaire
