@@ -1,93 +1,54 @@
 module Model exposing (..)
 
-import Material
+import Config exposing (..)
 import Questionnaire exposing (..)
 import User exposing (..)
 
 
 type Model
     = NotLoaded
-    | Loaded User Questionnaire
-    | Ready User Questionnaire
-    | Answering User Questionnaire
+    | Loaded User Questionnaire Config
+    | Ready User Questionnaire Config
+    | Answering User Questionnaire Config
     | Finished User
 
 
-getUser : Model -> User
-getUser model =
-    mapUser identity model
-
-
-setUser : Model -> User -> Model
-setUser model user =
+setConfig : Model -> Config -> Model
+setConfig model config =
     case model of
-        NotLoaded ->
+        Loaded user questionnaire _ ->
+            Loaded user questionnaire config
+
+        Ready user questionnaire _ ->
+            Ready user questionnaire config
+
+        Answering user questionnaire _ ->
+            Answering user questionnaire config
+
+        _ ->
             model
 
-        Loaded _ questionnaire ->
-            Loaded user questionnaire
 
-        Ready _ questionnaire ->
-            Ready user questionnaire
-
-        Answering _ questionnaire ->
-            Answering user questionnaire
-
-        Finished _ ->
-            Finished user
-
-
-mapUser : (User -> a) -> Model -> a
-mapUser fn model =
+getConfig : Model -> Config
+getConfig model =
     case model of
-        NotLoaded ->
-            fn User.default
+        Loaded user questionnaire config ->
+            config
 
-        Loaded user questionnaire ->
-            fn user
+        Ready user questionnaire config ->
+            config
 
-        Ready user questionnaire ->
-            fn user
+        Answering user questionnaire config ->
+            config
 
-        Answering user questionnaire ->
-            fn user
-
-        Finished user ->
-            fn user
-
-
-applyUser : (User -> User) -> Model -> Model
-applyUser fn model =
-    case model of
-        NotLoaded ->
-            model
-
-        Loaded user questionnaire ->
-            Loaded (fn user) questionnaire
-
-        Ready user questionnaire ->
-            Ready (fn user) questionnaire
-
-        Answering user questionnaire ->
-            Answering (fn user) questionnaire
-
-        Finished user ->
-            Finished (fn user)
+        _ ->
+            Config.default
 
 
 mapName : Model -> String -> String -> String -> String
 mapName model defaultTitle questionTitle thankYouTitle =
     case model of
-        NotLoaded ->
-            defaultTitle
-
-        Loaded _ questionnaire ->
-            defaultTitle
-
-        Ready _ questionnaire ->
-            defaultTitle
-
-        Answering _ questionnaire ->
+        Answering _ questionnaire config ->
             questionTitle
                 ++ " "
                 ++ toString questionnaire.current.order
@@ -95,12 +56,15 @@ mapName model defaultTitle questionTitle thankYouTitle =
         Finished _ ->
             thankYouTitle
 
+        _ ->
+            defaultTitle
+
 
 beginQuestionnaire : Model -> Model
 beginQuestionnaire model =
     case model of
-        Ready user questionnaire ->
-            Answering user questionnaire
+        Ready user questionnaire config ->
+            Answering user questionnaire config
 
         _ ->
             model
@@ -113,15 +77,15 @@ updateEmail model email =
             User.updateEmail email
     in
     case model of
-        Loaded user questionnaire ->
+        Loaded user questionnaire config ->
             let
                 newUser =
                     newUserFn user
             in
             if User.isReady user then
-                Ready newUser questionnaire
+                Ready newUser questionnaire config
             else
-                Loaded newUser questionnaire
+                Loaded newUser questionnaire config
 
         _ ->
             model

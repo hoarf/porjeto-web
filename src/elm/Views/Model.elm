@@ -1,7 +1,6 @@
 module Views.Model exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
 import Model exposing (..)
 import Msg exposing (..)
 import Views.Questionnaire
@@ -22,14 +21,14 @@ actions model =
                 NotLoaded ->
                     text ""
 
-                Loaded user _ ->
-                    Views.User.actions user
+                Loaded user _ config ->
+                    Views.User.actions user config.mdl
 
-                Ready user questionnaire ->
-                    Views.User.actions user
+                Ready user questionnaire config ->
+                    Views.User.actions user config.mdl
 
-                Answering user questionnaire ->
-                    Views.Questionnaire.actions questionnaire
+                Answering user questionnaire config ->
+                    Views.Questionnaire.actions questionnaire config.mdl
 
                 Finished questionnaire ->
                     text ""
@@ -45,14 +44,14 @@ content model =
                 NotLoaded ->
                     text ""
 
-                Loaded user _ ->
-                    Views.User.form user
+                Loaded user _ config ->
+                    Views.User.form user config.mdl
 
-                Ready user questionnaire ->
-                    Views.User.form user
+                Ready user questionnaire config ->
+                    Views.User.form user config.mdl
 
-                Answering user questionnaire ->
-                    Views.Questionnaire.actions questionnaire
+                Answering user questionnaire config ->
+                    Views.Questionnaire.content questionnaire config.mdl
 
                 Finished questionnaire ->
                     text ""
