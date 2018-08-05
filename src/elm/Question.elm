@@ -1,4 +1,4 @@
-module Question exposing (Answer(..), Question, default)
+module Question exposing (Answer(..), Question, default, q1)
 
 
 type Answer
@@ -28,3 +28,8 @@ default =
     , seconds = 0
     , order = 0
     }
+
+
+q1 : Question
+q1 =
+    { default | order = 1 }

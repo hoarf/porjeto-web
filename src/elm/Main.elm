@@ -50,7 +50,7 @@ update msg model =
             model ! []
 
         NextQuestion ->
-            model ! []
+            Model.nextQuestion model ! []
 
         PreviousQuestion ->
             model ! []

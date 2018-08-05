@@ -13,6 +13,37 @@ type Model
     | Finished User
 
 
+type Status
+    = WithoutData
+    | WithData User Questionnaire Config
+
+
+toStatus : Model -> Status
+toStatus model =
+    case model of
+        Loaded user questionnaire config ->
+            WithData user questionnaire config
+
+        Ready user questionnaire config ->
+            WithData user questionnaire config
+
+        Answering user questionnaire config ->
+            WithData user questionnaire config
+
+        _ ->
+            WithoutData
+
+
+mapConfig : (Config -> a) -> a -> Status -> a
+mapConfig fn default status =
+    case status of
+        WithoutData ->
+            default
+
+        WithData user questionnaire config ->
+            fn config
+
+
 setConfig : Model -> Config -> Model
 setConfig model config =
     case model of
@@ -31,18 +62,9 @@ setConfig model config =
 
 getConfig : Model -> Config
 getConfig model =
-    case model of
-        Loaded user questionnaire config ->
-            config
-
-        Ready user questionnaire config ->
-            config
-
-        Answering user questionnaire config ->
-            config
-
-        _ ->
-            Config.default
+    model
+        |> toStatus
+        |> mapConfig identity Config.default
 
 
 mapName : Model -> String -> String -> String -> String
@@ -86,6 +108,16 @@ updateEmail model email =
                 Ready newUser questionnaire config
             else
                 Loaded newUser questionnaire config
+
+        _ ->
+            model
+
+
+nextQuestion : Model -> Model
+nextQuestion model =
+    case model of
+        Answering user questionnaire config ->
+            Answering user (Questionnaire.next questionnaire) config
 
         _ ->
             model
