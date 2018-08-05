@@ -1,4 +1,4 @@
-module Questionnaire exposing (Progress(..), Questionnaire, default, next)
+module Questionnaire exposing (Progress(..), Questionnaire, default, next, previous)
 
 import Question exposing (..)
 
@@ -31,10 +31,12 @@ next : Questionnaire -> Questionnaire
 next questionnaire =
     let
         newProgress =
-            questionnaire.next
-                |> List.head
-                |> Maybe.map (\a -> InTheMiddleOfIt)
-                |> Maybe.withDefault LastQuestion
+            case questionnaire.next of
+                head :: [] ->
+                    LastQuestion
+
+                _ ->
+                    InTheMiddleOfIt
 
         newPrevious =
             questionnaire.previous ++ [ questionnaire.current ]
@@ -60,6 +62,50 @@ next questionnaire =
     in
     case questionnaire.progress of
         FirstQuestion ->
+            newQuestionnarie
+
+        InTheMiddleOfIt ->
+            newQuestionnarie
+
+        _ ->
+            questionnaire
+
+
+previous : Questionnaire -> Questionnaire
+previous questionnaire =
+    let
+        newProgress =
+            case questionnaire.previous of
+                head :: [] ->
+                    FirstQuestion
+
+                _ ->
+                    InTheMiddleOfIt
+
+        newNext =
+            questionnaire.next ++ [ questionnaire.current ]
+
+        newCurrent =
+            questionnaire.previous
+                |> List.head
+                |> Maybe.map identity
+                |> Maybe.withDefault questionnaire.current
+
+        newPrevious =
+            questionnaire.previous
+                |> List.tail
+                |> Maybe.map identity
+                |> Maybe.withDefault []
+
+        newQuestionnarie =
+            { progress = newProgress
+            , previous = newPrevious
+            , current = newCurrent
+            , next = newNext
+            }
+    in
+    case questionnaire.progress of
+        LastQuestion ->
             newQuestionnarie
 
         InTheMiddleOfIt ->

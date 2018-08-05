@@ -113,6 +113,16 @@ updateEmail model email =
             model
 
 
+previousQuestion : Model -> Model
+previousQuestion model =
+    case model of
+        Answering user questionnaire config ->
+            Answering user (Questionnaire.previous questionnaire) config
+
+        _ ->
+            model
+
+
 nextQuestion : Model -> Model
 nextQuestion model =
     case model of
