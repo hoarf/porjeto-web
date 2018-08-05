@@ -59,7 +59,7 @@ update msg model =
             Model.beginQuestionnaire model ! []
 
         FinishQuestionnaire ->
-            model ! []
+            Model.finishQuestionnaire model ! []
 
         Mdl message_ ->
             let

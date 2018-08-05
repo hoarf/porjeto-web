@@ -53,7 +53,7 @@ content model =
                 Answering user questionnaire config ->
                     Views.Questionnaire.content questionnaire config.mdl
 
-                Finished questionnaire ->
+                Finished user ->
                     text ""
     in
     section [] [ innerView ]

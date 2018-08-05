@@ -92,6 +92,21 @@ beginQuestionnaire model =
             model
 
 
+finishQuestionnaire : Model -> Model
+finishQuestionnaire model =
+    case model of
+        Answering user questionnaire config ->
+            case questionnaire.progress of
+                LastQuestion ->
+                    Finished user
+
+                _ ->
+                    model
+
+        _ ->
+            model
+
+
 updateEmail : Model -> String -> Model
 updateEmail model email =
     let
