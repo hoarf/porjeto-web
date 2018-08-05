@@ -1,6 +1,7 @@
 module Model exposing (..)
 
 import Config exposing (..)
+import Question exposing (..)
 import Questionnaire exposing (..)
 import User exposing (..)
 
@@ -146,3 +147,8 @@ nextQuestion model =
 
         _ ->
             model
+
+
+updateAnswer : Model -> Question -> Int -> Bool -> Model
+updateAnswer model question ix value =
+    model
