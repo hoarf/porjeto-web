@@ -1,4 +1,4 @@
-module Questionnaire exposing (Progress(..), Questionnaire, default, next)
+module Questionnaire exposing (Progress(..), Questionnaire, default, next, previous)
 
 import Question exposing (..)
 
@@ -29,64 +29,87 @@ default =
 
 next : Questionnaire -> Questionnaire
 next questionnaire =
+    let
+        newProgress =
+            case questionnaire.next of
+                head :: [] ->
+                    LastQuestion
+
+                _ ->
+                    InTheMiddleOfIt
+
+        newPrevious =
+            questionnaire.previous ++ [ questionnaire.current ]
+
+        newCurrent =
+            questionnaire.next
+                |> List.head
+                |> Maybe.map identity
+                |> Maybe.withDefault questionnaire.current
+
+        newNext =
+            questionnaire.next
+                |> List.tail
+                |> Maybe.map identity
+                |> Maybe.withDefault []
+
+        newQuestionnarie =
+            { progress = newProgress
+            , previous = newPrevious
+            , current = newCurrent
+            , next = newNext
+            }
+    in
     case questionnaire.progress of
         FirstQuestion ->
-            let
-                newProgress =
-                    questionnaire.next
-                        |> List.head
-                        |> Maybe.map (\a -> InTheMiddleOfIt)
-                        |> Maybe.withDefault LastQuestion
-
-                newPrevious =
-                    questionnaire.previous ++ [ questionnaire.current ]
-
-                newCurrent =
-                    questionnaire.next
-                        |> List.head
-                        |> Maybe.map identity
-                        |> Maybe.withDefault questionnaire.current
-
-                newNext =
-                    questionnaire.next
-                        |> List.tail
-                        |> Maybe.map identity
-                        |> Maybe.withDefault []
-            in
-            { progress = newProgress
-            , previous = newPrevious
-            , current = newCurrent
-            , next = newNext
-            }
+            newQuestionnarie
 
         InTheMiddleOfIt ->
-            let
-                newProgress =
-                    questionnaire.next
-                        |> List.head
-                        |> Maybe.map (\a -> InTheMiddleOfIt)
-                        |> Maybe.withDefault LastQuestion
+            newQuestionnarie
 
-                newPrevious =
-                    questionnaire.previous ++ [ questionnaire.current ]
+        _ ->
+            questionnaire
 
-                newCurrent =
-                    questionnaire.next
-                        |> List.head
-                        |> Maybe.map identity
-                        |> Maybe.withDefault questionnaire.current
 
-                newNext =
-                    questionnaire.next
-                        |> List.tail
-                        |> Maybe.map identity
-                        |> Maybe.withDefault []
-            in
+previous : Questionnaire -> Questionnaire
+previous questionnaire =
+    let
+        newProgress =
+            case questionnaire.previous of
+                head :: [] ->
+                    FirstQuestion
+
+                _ ->
+                    InTheMiddleOfIt
+
+        newNext =
+            questionnaire.next ++ [ questionnaire.current ]
+
+        newCurrent =
+            questionnaire.previous
+                |> List.head
+                |> Maybe.map identity
+                |> Maybe.withDefault questionnaire.current
+
+        newPrevious =
+            questionnaire.previous
+                |> List.tail
+                |> Maybe.map identity
+                |> Maybe.withDefault []
+
+        newQuestionnarie =
             { progress = newProgress
             , previous = newPrevious
             , current = newCurrent
             , next = newNext
             }
+    in
+    case questionnaire.progress of
+        LastQuestion ->
+            newQuestionnarie
+
+        InTheMiddleOfIt ->
+            newQuestionnarie
 
         _ ->
             questionnaire

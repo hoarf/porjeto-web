@@ -53,7 +53,7 @@ update msg model =
             Model.nextQuestion model ! []
 
         PreviousQuestion ->
-            model ! []
+            Model.previousQuestion model ! []
 
         BeginQuestionnaire ->
             Model.beginQuestionnaire model ! []
