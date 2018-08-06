@@ -1,6 +1,7 @@
 module Model exposing (..)
 
 import Config exposing (..)
+import Question exposing (..)
 import Questionnaire exposing (..)
 import User exposing (..)
 
@@ -143,6 +144,16 @@ nextQuestion model =
     case model of
         Answering user questionnaire config ->
             Answering user (Questionnaire.next questionnaire) config
+
+        _ ->
+            model
+
+
+updateAnswer : Model -> Question -> Int -> Bool -> Model
+updateAnswer model question ix value =
+    case model of
+        Answering user questionnaire config ->
+            Answering user (Questionnaire.updateAnswer questionnaire question ix value) config
 
         _ ->
             model
