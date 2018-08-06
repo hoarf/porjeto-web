@@ -149,11 +149,11 @@ nextQuestion model =
             model
 
 
-updateAnswer : Model -> Question -> Int -> Bool -> Model
-updateAnswer model question ix value =
+updateAnswer : Model -> Int -> Bool -> Model
+updateAnswer model ix value =
     case model of
         Answering user questionnaire config ->
-            Answering user (Questionnaire.updateAnswer questionnaire question ix value) config
+            Answering user (Questionnaire.updateAnswer questionnaire ix value) config
 
         _ ->
             model

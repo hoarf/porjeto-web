@@ -115,6 +115,6 @@ previous questionnaire =
             questionnaire
 
 
-updateAnswer : Questionnaire -> Question -> Int -> Bool -> Questionnaire
-updateAnswer questionnaire question ix value =
-    { questionnaire | current = Question.updateAnswer question ix value }
+updateAnswer : Questionnaire -> Int -> Bool -> Questionnaire
+updateAnswer questionnaire ix value =
+    { questionnaire | current = Question.updateAnswer questionnaire.current ix value }

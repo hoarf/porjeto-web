@@ -71,8 +71,8 @@ update msg model =
         UserChanged email ->
             Model.updateEmail model email ! []
 
-        UpdateAnswer question ix value ->
-            Model.updateAnswer model question ix value ! []
+        UpdateAnswer ix value ->
+            Model.updateAnswer model ix value ! []
 
 
 

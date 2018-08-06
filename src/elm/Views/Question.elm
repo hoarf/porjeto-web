@@ -33,6 +33,6 @@ checkbox_ ix { description, value } mdl question =
         mdl
         [ Toggles.ripple
         , Toggles.value value
-        , Options.onCheck (UpdateAnswer question ix)
+        , Options.onCheck (UpdateAnswer ix)
         ]
         [ text description ]

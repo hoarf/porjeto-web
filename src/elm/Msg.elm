@@ -14,5 +14,5 @@ type Msg
     | BeginQuestionnaire
     | FinishQuestionnaire
     | UserChanged String
-    | UpdateAnswer Question Int Bool
+    | UpdateAnswer Int Bool
     | QuestionairieHttpRequest (Result Http.Error Questionnaire)
