@@ -27,12 +27,12 @@ view question mdl =
 
 
 checkbox_ : Int -> Answer -> Material.Model -> Question -> Html Msg
-checkbox_ ix (Answer text_) mdl question =
+checkbox_ ix { description, value } mdl question =
     Toggles.checkbox Mdl
         [ ix ]
         mdl
         [ Toggles.ripple
-        , Toggles.value True
+        , Toggles.value value
         , Options.onCheck (UpdateAnswer question ix)
         ]
-        [ text text_ ]
+        [ text description ]
