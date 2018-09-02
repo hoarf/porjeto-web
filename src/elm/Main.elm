@@ -30,7 +30,7 @@ main =
 
 show : Model -> Cmd Msg
 show model =
-    Task.perform QuestionairieHttpRequest (Task.succeed (Ok Questionnaire.default))
+    Task.perform QuestionnaireRetrieveResult (Task.succeed (Ok Questionnaire.default))
 
 
 
@@ -43,10 +43,16 @@ update msg model =
         NoOp ->
             model ! []
 
-        QuestionairieHttpRequest (Ok a) ->
+        QuestionnaireRetrieveResult (Ok a) ->
             Answering User.default a Config.default ! []
 
-        QuestionairieHttpRequest (Err a) ->
+        QuestionnaireRetrieveResult (Err a) ->
+            model ! []
+
+        EvaluationCreateResult (Ok a) ->
+            model ! []
+
+        EvaluationCreateResult (Err a) ->
             model ! []
 
         NextQuestion ->

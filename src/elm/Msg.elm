@@ -1,5 +1,6 @@
 module Msg exposing (..)
 
+import Evaluation exposing (..)
 import Http
 import Material
 import Question exposing (..)
@@ -15,4 +16,5 @@ type Msg
     | FinishQuestionnaire
     | UserChanged String
     | UpdateAnswer Int Bool
-    | QuestionairieHttpRequest (Result Http.Error Questionnaire)
+    | QuestionnaireRetrieveResult (Result Http.Error Questionnaire)
+    | EvaluationCreateResult (Result Http.Error Evaluation)
