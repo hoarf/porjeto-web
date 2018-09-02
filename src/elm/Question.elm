@@ -1,10 +1,8 @@
-module Question exposing (Answer, Question, default, q1, updateAnswer)
+module Question exposing (Question, decoder, default, q1, updateAnswer)
 
-
-type alias Answer =
-    { description : String
-    , value : Bool
-    }
+import Answer exposing (..)
+import Json.Decode as Decode
+import Json.Encode
 
 
 type alias Question =
@@ -37,6 +35,19 @@ q1 =
     { default | order = 1 }
 
 
+decoder : Decode.Decoder Question
+decoder =
+    Decode.map8 Question
+        (Decode.field "description" Decode.string)
+        (Decode.field "answer1" Answer.decoder)
+        (Decode.field "answer2" Answer.decoder)
+        (Decode.field "answer3" Answer.decoder)
+        (Decode.field "answer4" Answer.decoder)
+        (Decode.field "answer5" Answer.decoder)
+        (Decode.succeed 0)
+        (Decode.succeed 1)
+
+
 updateAnswer : Question -> Int -> Bool -> Question
 updateAnswer question ix value =
     case ix of
@@ -57,8 +68,3 @@ updateAnswer question ix value =
 
         _ ->
             question
-
-
-update : Answer -> Bool -> Answer
-update answer value =
-    { answer | value = value }

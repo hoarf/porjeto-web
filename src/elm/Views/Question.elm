@@ -1,5 +1,6 @@
 module Views.Question exposing (..)
 
+import Answer exposing (..)
 import Html exposing (..)
 import Material
 import Material.List as Lists

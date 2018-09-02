@@ -1,12 +1,13 @@
 module Questionnaire exposing (Progress(..), Questionnaire, default, next, previous, updateAnswer)
 
+import Json.Decode as Decode
+import List.Extra as List
 import Question exposing (..)
 
 
 type Progress
     = FirstQuestion
     | InTheMiddleOfIt
-    | SingleQuestion
     | LastQuestion
 
 
@@ -16,6 +17,19 @@ type alias Questionnaire =
     , current : Question
     , next : List Question
     }
+
+
+questionnaireDecoder : Decode.Decoder Questionnaire
+questionnaireDecoder =
+    Decode.map4 Questionnaire
+        (Decode.succeed FirstQuestion)
+        (Decode.succeed [])
+        (Decode.map (Maybe.withDefault Question.default)
+            (Decode.field "questions"
+                (Decode.map List.head (Decode.list Question.decoder))
+            )
+        )
+        (Decode.succeed [])
 
 
 default : Questionnaire

@@ -1,7 +1,6 @@
 module Model exposing (..)
 
 import Config exposing (..)
-import Question exposing (..)
 import Questionnaire exposing (..)
 import User exposing (..)
 

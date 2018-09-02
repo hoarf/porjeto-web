@@ -42,10 +42,6 @@ actions questionnaire mdl =
             Options.div [ Options.cs "actions two" ]
                 [ prevButton, finishButton ]
 
-        SingleQuestion ->
-            Options.div [ Options.cs "actions one" ]
-                [ finishButton ]
-
 
 button_ : Int -> String -> Material.Model -> Msg -> Html Msg
 button_ ix text_ mdl msg =
