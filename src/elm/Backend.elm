@@ -3,11 +3,12 @@ module Backend exposing (getQuestionnaireQuestions, postEvaluation)
 import Evaluation exposing (..)
 import Http exposing (jsonBody, post)
 import Msg exposing (..)
+import Questionnaire exposing (..)
 import User exposing (..)
 
 
-postEvaluation : Int -> Cmd Msg
-postEvaluation userId =
+postEvaluation : User -> Cmd Msg
+postEvaluation user =
     Http.send EvaluationCreateResult
         (Http.post
             "http://localhost:4000/evaluation"

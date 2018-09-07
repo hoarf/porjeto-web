@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Config
+import Backend
 import Html exposing (..)
 import Material
 import Model exposing (..)
@@ -19,18 +19,9 @@ main =
     Html.program
         { view = view
         , update = update
-        , init = NotLoaded ! [ show NotLoaded ]
+        , init = Init { mdl = Material.model } ! []
         , subscriptions = \m -> Sub.none
         }
-
-
-
--- MODEL
-
-
-show : Model -> Cmd Msg
-show model =
-    Task.perform QuestionnaireRetrieveResult (Task.succeed (Ok Questionnaire.default))
 
 
 
@@ -43,8 +34,8 @@ update msg model =
         NoOp ->
             model ! []
 
-        QuestionnaireRetrieveResult (Ok a) ->
-            Answering User.default a Config.default ! []
+        QuestionnaireRetrieveResult (Ok questionnaire) ->
+            Model.toAnswering model questionnaire ! []
 
         QuestionnaireRetrieveResult (Err a) ->
             model ! []
@@ -62,17 +53,13 @@ update msg model =
             Model.previousQuestion model ! []
 
         BeginQuestionnaire ->
-            Model.beginQuestionnaire model ! []
+            model ! Model.postEvaluation model
 
         FinishQuestionnaire ->
-            Model.finishQuestionnaire model ! []
+            model ! []
 
         Mdl message_ ->
-            let
-                ( newConfig, cmds ) =
-                    Material.update Mdl message_ (Model.getConfig model)
-            in
-            Model.setConfig model newConfig ! [ cmds ]
+            Model.updateMdl model message_
 
         UserChanged email ->
             Model.updateEmail model email ! []

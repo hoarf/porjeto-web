@@ -18,19 +18,13 @@ actions model =
     let
         innerView =
             case model of
-                NotLoaded ->
-                    text ""
+                Ready context ->
+                    Views.User.actions context.user context.mdl
 
-                Loaded user _ config ->
-                    Views.User.actions user config.mdl
+                Answering context ->
+                    Views.Questionnaire.actions context.questionnaire context.mdl
 
-                Ready user questionnaire config ->
-                    Views.User.actions user config.mdl
-
-                Answering user questionnaire config ->
-                    Views.Questionnaire.actions questionnaire config.mdl
-
-                Finished questionnaire ->
+                _ ->
                     text ""
     in
     div [] [ innerView ]
@@ -41,19 +35,13 @@ content model =
     let
         innerView =
             case model of
-                NotLoaded ->
-                    text ""
+                Ready context ->
+                    Views.User.actions context.user context.mdl
 
-                Loaded user _ config ->
-                    Views.User.form user config.mdl
+                Answering context ->
+                    Views.Questionnaire.actions context.questionnaire context.mdl
 
-                Ready user questionnaire config ->
-                    Views.User.form user config.mdl
-
-                Answering user questionnaire config ->
-                    Views.Questionnaire.content questionnaire config.mdl
-
-                Finished user ->
+                _ ->
                     text ""
     in
     section [] [ innerView ]

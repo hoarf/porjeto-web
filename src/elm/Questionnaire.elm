@@ -1,4 +1,4 @@
-module Questionnaire exposing (Progress(..), Questionnaire, default, next, previous, updateAnswer)
+module Questionnaire exposing (Progress(..), Questionnaire, decoder, default, next, previous, updateAnswer)
 
 import Json.Decode as Decode
 import List.Extra as List
@@ -19,8 +19,8 @@ type alias Questionnaire =
     }
 
 
-questionnaireDecoder : Decode.Decoder Questionnaire
-questionnaireDecoder =
+decoder : Decode.Decoder Questionnaire
+decoder =
     Decode.map4 Questionnaire
         (Decode.succeed FirstQuestion)
         (Decode.succeed [])

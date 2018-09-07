@@ -1,107 +1,68 @@
 module Model exposing (..)
 
-import Config exposing (..)
+import Backend exposing (..)
+import Evaluation exposing (..)
+import Material exposing (update)
+import Msg exposing (..)
 import Questionnaire exposing (..)
 import User exposing (..)
 
 
 type Model
-    = NotLoaded
-    | Loaded User Questionnaire Config
-    | Ready User Questionnaire Config
-    | Answering User Questionnaire Config
-    | Finished User
-
-
-type Status
-    = WithoutData
-    | WithData User Questionnaire Config
-
-
-toStatus : Model -> Status
-toStatus model =
-    case model of
-        Loaded user questionnaire config ->
-            WithData user questionnaire config
-
-        Ready user questionnaire config ->
-            WithData user questionnaire config
-
-        Answering user questionnaire config ->
-            WithData user questionnaire config
-
-        _ ->
-            WithoutData
-
-
-mapConfig : (Config -> a) -> a -> Status -> a
-mapConfig fn default status =
-    case status of
-        WithoutData ->
-            default
-
-        WithData user questionnaire config ->
-            fn config
-
-
-setConfig : Model -> Config -> Model
-setConfig model config =
-    case model of
-        Loaded user questionnaire _ ->
-            Loaded user questionnaire config
-
-        Ready user questionnaire _ ->
-            Ready user questionnaire config
-
-        Answering user questionnaire _ ->
-            Answering user questionnaire config
-
-        _ ->
-            model
-
-
-getConfig : Model -> Config
-getConfig model =
-    model
-        |> toStatus
-        |> mapConfig identity Config.default
+    = Init { mdl : Material.Model }
+    | Ready { mdl : Material.Model, user : Maybe User }
+    | LoadingEval { mdl : Material.Model, user : User }
+    | LoadingQuestionnaire { mdl : Material.Model, user : User, eval : Evaluation }
+    | Answering { mdl : Material.Model, user : User, eval : Evaluation, questionnaire : Questionnaire }
+    | Finished { mdl : Material.Model, user : User, eval : Evaluation, questionnaire : Questionnaire }
 
 
 mapName : Model -> String -> String -> String -> String
 mapName model defaultTitle questionTitle thankYouTitle =
     case model of
-        Answering _ questionnaire config ->
+        Answering context ->
             questionTitle
                 ++ " "
-                ++ toString questionnaire.current.order
+                ++ toString context.questionnaire.current.order
 
-        Finished _ ->
+        Finished context ->
             thankYouTitle
 
         _ ->
             defaultTitle
 
 
-beginQuestionnaire : Model -> Model
-beginQuestionnaire model =
+
+-- beginQuestionnaire : Model -> Model
+-- beginQuestionnaire model =
+--     case model of
+--         Ready user questionnaire config ->
+--             Answering user questionnaire config
+--         _ ->
+--             model
+-- finishQuestionnaire : Model -> Model
+-- finishQuestionnaire model =
+--     case model of
+--         Answering user questionnaire config ->
+--             case questionnaire.progress of
+--                 LastQuestion ->
+--                     Finished user
+--                 _ ->
+--                     model
+--         _ ->
+--             model
+
+
+toAnswering : Model -> Questionnaire -> Model
+toAnswering model questionnaire =
     case model of
-        Ready user questionnaire config ->
-            Answering user questionnaire config
-
-        _ ->
-            model
-
-
-finishQuestionnaire : Model -> Model
-finishQuestionnaire model =
-    case model of
-        Answering user questionnaire config ->
-            case questionnaire.progress of
-                LastQuestion ->
-                    Finished user
-
-                _ ->
-                    model
+        LoadingQuestionnaire context ->
+            Answering
+                { user = context.user
+                , mdl = context.mdl
+                , eval = context.eval
+                , questionnaire = questionnaire
+                }
 
         _ ->
             model
@@ -110,19 +71,12 @@ finishQuestionnaire model =
 updateEmail : Model -> String -> Model
 updateEmail model email =
     let
-        newUserFn =
-            User.updateEmail email
+        newUser =
+            Just { email = email }
     in
     case model of
-        Loaded user questionnaire config ->
-            let
-                newUser =
-                    newUserFn user
-            in
-            if User.isReady user then
-                Ready newUser questionnaire config
-            else
-                Loaded newUser questionnaire config
+        Ready context ->
+            Ready { context | user = newUser }
 
         _ ->
             model
@@ -131,18 +85,28 @@ updateEmail model email =
 previousQuestion : Model -> Model
 previousQuestion model =
     case model of
-        Answering user questionnaire config ->
-            Answering user (Questionnaire.previous questionnaire) config
+        Answering context ->
+            Answering { context | questionnaire = Questionnaire.next context.questionnaire }
 
         _ ->
             model
 
 
+postEvaluation : Model -> List (Cmd Msg.Msg)
+postEvaluation model =
+    case model of
+        LoadingEval context ->
+            [ Backend.postEvaluation context.user ]
+
+        _ ->
+            []
+
+
 nextQuestion : Model -> Model
 nextQuestion model =
     case model of
-        Answering user questionnaire config ->
-            Answering user (Questionnaire.next questionnaire) config
+        Answering context ->
+            Answering { context | questionnaire = Questionnaire.next context.questionnaire }
 
         _ ->
             model
@@ -151,8 +115,21 @@ nextQuestion model =
 updateAnswer : Model -> Int -> Bool -> Model
 updateAnswer model ix value =
     case model of
-        Answering user questionnaire config ->
-            Answering user (Questionnaire.updateAnswer questionnaire ix value) config
+        Answering context ->
+            Answering { context | questionnaire = Questionnaire.updateAnswer context.questionnaire ix value }
 
         _ ->
             model
+
+
+updateMdl model message_ =
+    case model of
+        Answering context ->
+            let
+                ( newContext, cmds ) =
+                    Material.update Mdl message_ context
+            in
+            ( Answering newContext, cmds )
+
+        _ ->
+            ( model, Cmd.none )

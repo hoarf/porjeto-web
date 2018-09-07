@@ -10,7 +10,7 @@ import Msg exposing (..)
 import User exposing (..)
 
 
-actions : User -> Material.Model -> Html Msg
+actions : Maybe User -> Material.Model -> Html Msg
 actions user mdl =
     Options.div [ Options.cs "actions one" ]
         [ Button.render Mdl
@@ -27,7 +27,7 @@ actions user mdl =
         ]
 
 
-form : User -> Material.Model -> Html Msg
+form : Maybe User -> Material.Model -> Html Msg
 form user mdl =
     Options.div [ Options.cs "content" ]
         [ p [] [ text welcome ]

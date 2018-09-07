@@ -1,5 +1,6 @@
-module User exposing (User, default, isNotReady, isReady, updateEmail)
+module User exposing (User, default, encode, isNotReady, isReady, updateEmail)
 
+import Json.Encode as Encode
 import Regex exposing (Regex)
 
 
@@ -19,9 +20,11 @@ isInvalid user =
     not <| Regex.contains validEmail user.email
 
 
-isNotReady : User -> Bool
+isNotReady : Maybe User -> Bool
 isNotReady user =
-    isInvalid user
+    user
+        |> Maybe.map (\u -> True)
+        |> Maybe.withDefault False
 
 
 isReady : User -> Bool
@@ -40,3 +43,9 @@ validEmail : Regex
 validEmail =
     Regex.regex "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
         |> Regex.caseInsensitive
+
+
+encode : User -> Encode.Value
+encode user =
+    Encode.object
+        [ ( "email", Encode.string user.email ) ]
