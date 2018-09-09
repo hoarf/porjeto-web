@@ -1,5 +1,6 @@
 module Views.User exposing (..)
 
+import EmailInput exposing (..)
 import Html exposing (..)
 import Html.Events.Extra exposing (..)
 import Material
@@ -10,8 +11,8 @@ import Msg exposing (..)
 import User exposing (..)
 
 
-actions : Maybe User -> Material.Model -> Html Msg
-actions user mdl =
+actions : EmailInput -> Material.Model -> Html Msg
+actions emailInput mdl =
     Options.div [ Options.cs "actions one" ]
         [ Button.render Mdl
             [ 1 ]
@@ -21,13 +22,13 @@ actions user mdl =
             , Button.colored
             , Options.cs "pull-end"
             , Options.onClick BeginQuestionnaire
-            , Button.disabled |> Options.when (User.isNotReady user)
+            , Button.disabled |> Options.when (EmailInput.isInvalid emailInput)
             ]
             [ text "Begin Questionnaire" ]
         ]
 
 
-form : Maybe User -> Material.Model -> Html Msg
+form : EmailInput -> Material.Model -> Html Msg
 form user mdl =
     Options.div [ Options.cs "content" ]
         [ p [] [ text welcome ]
@@ -42,6 +43,7 @@ form user mdl =
             , Options.onInput UserChanged
             ]
             []
+        , p [] [ user.validation |> Maybe.withDefault "" |> text ]
         ]
 
 

@@ -18,8 +18,8 @@ actions model =
     let
         innerView =
             case model of
-                Ready context ->
-                    Views.User.actions context.user context.mdl
+                Init context ->
+                    Views.User.actions context.email context.mdl
 
                 Answering context ->
                     Views.Questionnaire.actions context.questionnaire context.mdl
@@ -35,8 +35,8 @@ content model =
     let
         innerView =
             case model of
-                Ready context ->
-                    Views.User.actions context.user context.mdl
+                Init context ->
+                    Views.User.form context.email context.mdl
 
                 Answering context ->
                     Views.Questionnaire.actions context.questionnaire context.mdl

@@ -1,6 +1,7 @@
 module Model exposing (..)
 
 import Backend exposing (..)
+import EmailInput exposing (..)
 import Evaluation exposing (..)
 import Material exposing (update)
 import Msg exposing (..)
@@ -9,12 +10,31 @@ import User exposing (..)
 
 
 type Model
-    = Init { mdl : Material.Model }
-    | Ready { mdl : Material.Model, user : Maybe User }
-    | LoadingEval { mdl : Material.Model, user : User }
-    | LoadingQuestionnaire { mdl : Material.Model, user : User, eval : Evaluation }
-    | Answering { mdl : Material.Model, user : User, eval : Evaluation, questionnaire : Questionnaire }
-    | Finished { mdl : Material.Model, user : User, eval : Evaluation, questionnaire : Questionnaire }
+    = Init
+        { mdl : Material.Model
+        , email : EmailInput
+        }
+    | LoadingEval
+        { mdl : Material.Model
+        , user : User
+        }
+    | LoadingQuestionnaire
+        { mdl : Material.Model
+        , user : User
+        , eval : Evaluation
+        }
+    | Answering
+        { mdl : Material.Model
+        , user : User
+        , eval : Evaluation
+        , questionnaire : Questionnaire
+        }
+    | Finished
+        { mdl : Material.Model
+        , user : User
+        , eval : Evaluation
+        , questionnaire : Questionnaire
+        }
 
 
 mapName : Model -> String -> String -> String -> String
@@ -30,27 +50,6 @@ mapName model defaultTitle questionTitle thankYouTitle =
 
         _ ->
             defaultTitle
-
-
-
--- beginQuestionnaire : Model -> Model
--- beginQuestionnaire model =
---     case model of
---         Ready user questionnaire config ->
---             Answering user questionnaire config
---         _ ->
---             model
--- finishQuestionnaire : Model -> Model
--- finishQuestionnaire model =
---     case model of
---         Answering user questionnaire config ->
---             case questionnaire.progress of
---                 LastQuestion ->
---                     Finished user
---                 _ ->
---                     model
---         _ ->
---             model
 
 
 toAnswering : Model -> Questionnaire -> Model
@@ -70,13 +69,9 @@ toAnswering model questionnaire =
 
 updateEmail : Model -> String -> Model
 updateEmail model email =
-    let
-        newUser =
-            Just { email = email }
-    in
     case model of
-        Ready context ->
-            Ready { context | user = newUser }
+        Init context ->
+            Init { context | email = EmailInput.default email }
 
         _ ->
             model
@@ -95,8 +90,8 @@ previousQuestion model =
 postEvaluation : Model -> List (Cmd Msg.Msg)
 postEvaluation model =
     case model of
-        LoadingEval context ->
-            [ Backend.postEvaluation context.user ]
+        Init context ->
+            [ Backend.postEvaluation context.email ]
 
         _ ->
             []
@@ -133,3 +128,12 @@ updateMdl model message_ =
 
         _ ->
             ( model, Cmd.none )
+
+
+updateValidation model validation =
+    case model of
+        Init context ->
+            Init { context | email = EmailInput.updateValidation context.email validation }
+
+        _ ->
+            model

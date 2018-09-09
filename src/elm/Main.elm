@@ -1,13 +1,12 @@
 module Main exposing (..)
 
-import Backend
+import EmailInput
 import Html exposing (..)
+import Http exposing (Response)
+import Json.Decode as Decode
 import Material
 import Model exposing (..)
 import Msg exposing (..)
-import Questionnaire exposing (..)
-import Task exposing (..)
-import User exposing (..)
 import Views.Model exposing (..)
 
 
@@ -19,7 +18,12 @@ main =
     Html.program
         { view = view
         , update = update
-        , init = Init { mdl = Material.model } ! []
+        , init =
+            Init
+                { mdl = Material.model
+                , email = EmailInput.default ""
+                }
+                ! []
         , subscriptions = \m -> Sub.none
         }
 
@@ -35,13 +39,13 @@ update msg model =
             model ! []
 
         QuestionnaireRetrieveResult (Ok questionnaire) ->
-            Model.toAnswering model questionnaire ! []
+            Debug.log "Hello" (Model.toAnswering model questionnaire) ! []
 
-        QuestionnaireRetrieveResult (Err a) ->
-            model ! []
+        QuestionnaireRetrieveResult (Err error) ->
+            Model.updateValidation model (decodeError error) ! []
 
-        EvaluationCreateResult (Ok a) ->
-            model ! []
+        EvaluationCreateResult (Ok evaluation) ->
+            Debug.log "Herro" model ! []
 
         EvaluationCreateResult (Err a) ->
             model ! []
@@ -79,3 +83,23 @@ view model =
         , Views.Model.content model
         , Views.Model.actions model
         ]
+
+
+decodeError : Http.Error -> String
+decodeError error =
+    case error of
+        Http.BadStatus response ->
+            parseError response.body
+
+        _ ->
+            "Something went wrong"
+
+
+parseError : String -> String
+parseError body =
+    case Decode.decodeString (Decode.field "message" Decode.string) body of
+        Ok value ->
+            value
+
+        Err error ->
+            "Invalid Response."
