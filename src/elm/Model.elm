@@ -67,6 +67,20 @@ toAnswering model questionnaire =
             model
 
 
+toLoadingEval : Model -> ( Model, Cmd Msg )
+toLoadingEval model =
+    case model of
+        Init context ->
+            LoadingEval
+                { mdl = context.mdl
+                , user = { email = context.email.input }
+                }
+                ! [ Backend.postEvaluation context.email ]
+
+        _ ->
+            model ! []
+
+
 updateEmail : Model -> String -> Model
 updateEmail model email =
     case model of
@@ -85,16 +99,6 @@ previousQuestion model =
 
         _ ->
             model
-
-
-postEvaluation : Model -> List (Cmd Msg.Msg)
-postEvaluation model =
-    case model of
-        Init context ->
-            [ Backend.postEvaluation context.email ]
-
-        _ ->
-            []
 
 
 nextQuestion : Model -> Model
@@ -124,10 +128,10 @@ updateMdl model message_ =
                 ( newContext, cmds ) =
                     Material.update Mdl message_ context
             in
-            ( Answering newContext, cmds )
+            Answering newContext ! [ cmds ]
 
         _ ->
-            ( model, Cmd.none )
+            model ! [ Cmd.none ]
 
 
 updateValidation model validation =

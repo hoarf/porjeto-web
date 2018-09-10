@@ -45,7 +45,8 @@ update msg model =
             Model.updateValidation model (decodeError error) ! []
 
         EvaluationCreateResult (Ok evaluation) ->
-            Debug.log "Herro" model ! []
+            -- Model.toLoadingQuestionnaire model evaluation
+            model ! []
 
         EvaluationCreateResult (Err a) ->
             model ! []
@@ -57,7 +58,7 @@ update msg model =
             Model.previousQuestion model ! []
 
         BeginQuestionnaire ->
-            model ! Model.postEvaluation model
+            Model.toLoadingEval model
 
         FinishQuestionnaire ->
             model ! []
