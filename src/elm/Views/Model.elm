@@ -45,7 +45,7 @@ content model =
                     text "Loading questionnaire.."
 
                 Answering context ->
-                    Views.Questionnaire.actions context.questionnaire context.mdl
+                    Views.Questionnaire.content context.questionnaire context.mdl
 
                 Error message ->
                     text message
