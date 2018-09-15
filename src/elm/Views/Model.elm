@@ -38,8 +38,17 @@ content model =
                 Init context ->
                     Views.User.form context.email context.mdl
 
+                LoadingEval conext ->
+                    text "Loading evaluation.."
+
+                LoadingQuestionnaire conext ->
+                    text "Loading questionnaire.."
+
                 Answering context ->
                     Views.Questionnaire.actions context.questionnaire context.mdl
+
+                Error message ->
+                    text message
 
                 _ ->
                     text ""

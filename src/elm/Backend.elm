@@ -21,6 +21,9 @@ getQuestionnaireQuestions : Int -> Cmd Msg
 getQuestionnaireQuestions questionnaireId =
     Http.send QuestionnaireRetrieveResult
         (Http.get
-            "http://localhost:4000/questionnaires//questions"
+            ("http://localhost:4000/questionnaire/"
+                ++ toString questionnaireId
+                ++ "/questions"
+            )
             Questionnaire.decoder
         )

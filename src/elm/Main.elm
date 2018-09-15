@@ -42,14 +42,13 @@ update msg model =
             Debug.log "Hello" (Model.toAnswering model questionnaire) ! []
 
         QuestionnaireRetrieveResult (Err error) ->
-            Model.updateValidation model (decodeError error) ! []
+            Error (decodeError error) ! []
 
         EvaluationCreateResult (Ok evaluation) ->
-            -- Model.toLoadingQuestionnaire model evaluation
-            model ! []
+            Model.toLoadingQuestionnaire model evaluation
 
-        EvaluationCreateResult (Err a) ->
-            model ! []
+        EvaluationCreateResult (Err error) ->
+            Error (decodeError error) ! []
 
         NextQuestion ->
             Model.nextQuestion model ! []
@@ -88,12 +87,16 @@ view model =
 
 decodeError : Http.Error -> String
 decodeError error =
+    let
+        err =
+            toString error
+    in
     case error of
         Http.BadStatus response ->
             parseError response.body
 
         _ ->
-            "Something went wrong"
+            "Something went wrong: " ++ err
 
 
 parseError : String -> String

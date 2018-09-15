@@ -35,6 +35,7 @@ type Model
         , eval : Evaluation
         , questionnaire : Questionnaire
         }
+    | Error String
 
 
 mapName : Model -> String -> String -> String -> String
@@ -81,6 +82,21 @@ toLoadingEval model =
             model ! []
 
 
+toLoadingQuestionnaire : Model -> Evaluation -> ( Model, Cmd Msg )
+toLoadingQuestionnaire model evaluation =
+    case model of
+        LoadingEval context ->
+            LoadingQuestionnaire
+                { mdl = context.mdl
+                , user = context.user
+                , eval = evaluation
+                }
+                ! [ Backend.getQuestionnaireQuestions evaluation.questionnaireId ]
+
+        _ ->
+            model ! []
+
+
 updateEmail : Model -> String -> Model
 updateEmail model email =
     case model of
@@ -121,6 +137,7 @@ updateAnswer model ix value =
             model
 
 
+updateMdl : Model -> Material.Msg Msg -> ( Model, Cmd Msg )
 updateMdl model message_ =
     case model of
         Answering context ->
@@ -134,6 +151,7 @@ updateMdl model message_ =
             model ! [ Cmd.none ]
 
 
+updateValidation : Model -> String -> Model
 updateValidation model validation =
     case model of
         Init context ->
