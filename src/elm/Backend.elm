@@ -3,6 +3,7 @@ module Backend exposing (getQuestionnaireQuestions, postEvaluation)
 import EmailInput exposing (..)
 import Evaluation exposing (..)
 import Http exposing (jsonBody, post)
+import Json.Decode as Decode
 import Msg exposing (..)
 import Questionnaire exposing (..)
 
@@ -25,5 +26,5 @@ getQuestionnaireQuestions questionnaireId =
                 ++ toString questionnaireId
                 ++ "/questions"
             )
-            Questionnaire.decoder
+            (Decode.field "data" Questionnaire.decoder)
         )
