@@ -17,5 +17,5 @@ type alias Answer =
 decoder : Decode.Decoder Answer
 decoder =
     Decode.map2 Answer
-        (Decode.field "description" Decode.string)
+        Decode.string
         (Decode.succeed False)
