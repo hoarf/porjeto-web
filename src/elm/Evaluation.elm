@@ -12,5 +12,5 @@ type alias Evaluation =
 decoder : Decode.Decoder Evaluation
 decoder =
     Decode.map2 Evaluation
-        (Decode.field "questionnaire_id" Decode.int)
         (Decode.field "evaluation_id" Decode.int)
+        (Decode.field "questionnaire_id" Decode.int)
