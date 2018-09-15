@@ -121,7 +121,7 @@ previousQuestion : Model -> Model
 previousQuestion model =
     case model of
         Answering context ->
-            Answering { context | questionnaire = Questionnaire.next context.questionnaire }
+            Answering { context | questionnaire = Questionnaire.previous context.questionnaire }
 
         _ ->
             model
