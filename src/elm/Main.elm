@@ -39,7 +39,7 @@ update msg model =
             model ! []
 
         QuestionnaireRetrieveResult (Ok questionnaire) ->
-            Debug.log "Hello" (Model.toAnswering model questionnaire) ! []
+            Model.toAnswering model questionnaire ! []
 
         QuestionnaireRetrieveResult (Err error) ->
             Error (decodeError error) ! []
@@ -60,7 +60,7 @@ update msg model =
             Model.toLoadingEval model
 
         FinishQuestionnaire ->
-            model ! []
+            Model.toFinished model
 
         Mdl message_ ->
             Model.updateMdl model message_
