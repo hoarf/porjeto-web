@@ -25,11 +25,11 @@ decoder =
         (Decode.succeed FirstQuestion)
         (Decode.succeed [])
         (Decode.map (Maybe.withDefault Question.default)
-            (Decode.field "questions"
-                (Decode.map List.head (Decode.list Question.decoder))
-            )
+            (Decode.map List.head (Decode.list Question.decoder))
         )
-        (Decode.succeed [])
+        (Decode.map (Maybe.withDefault [])
+            (Decode.map List.tail (Decode.list Question.decoder))
+        )
 
 
 default : Questionnaire
