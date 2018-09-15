@@ -82,6 +82,16 @@ toLoadingEval model =
             model ! []
 
 
+toFinished : Model -> ( Model, Cmd Msg )
+toFinished model =
+    case model of
+        Answering context ->
+            Finished context ! []
+
+        _ ->
+            model ! []
+
+
 toLoadingQuestionnaire : Model -> Evaluation -> ( Model, Cmd Msg )
 toLoadingQuestionnaire model evaluation =
     case model of
