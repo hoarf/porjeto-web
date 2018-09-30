@@ -1,7 +1,6 @@
 module Questionnaire exposing (Progress(..), Questionnaire, decoder, default, next, previous, updateAnswer)
 
 import Json.Decode as Decode
-import List.Extra as List
 import Question exposing (..)
 
 

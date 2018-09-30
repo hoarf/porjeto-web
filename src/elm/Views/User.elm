@@ -8,7 +8,6 @@ import Material.Button as Button
 import Material.Options as Options
 import Material.Textfield as Textfield
 import Msg exposing (..)
-import User exposing (..)
 
 
 actions : EmailInput -> Material.Model -> Html Msg

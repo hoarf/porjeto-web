@@ -2,31 +2,25 @@ module Question exposing (Question, decoder, default, q1, updateAnswer)
 
 import Answer exposing (..)
 import Json.Decode as Decode
-import Json.Encode
+import RecordId exposing (..)
 
 
 type alias Question =
     { description : String
-    , answer1 : Answer
-    , answer2 : Answer
-    , answer3 : Answer
-    , answer4 : Answer
-    , answer5 : Answer
-    , seconds : Int
+    , answer : Answer
     , order : Int
+    , seconds : Int
+    , id : RecordId
     }
 
 
 default : Question
 default =
     { description = "What kind of question is this?"
-    , answer1 = Answer "I dunno" False
-    , answer2 = Answer "A dumb one" False
-    , answer3 = Answer "A retarded one" False
-    , answer4 = Answer "A smart one" False
-    , answer5 = Answer "Whatever dude" False
-    , seconds = 0
+    , answer = Answer [ "I dunno" ] [ False ] RecordId.default
     , order = 0
+    , seconds = 0
+    , id = 0
     }
 
 
@@ -37,34 +31,14 @@ q1 =
 
 decoder : Decode.Decoder Question
 decoder =
-    Decode.map8 Question
+    Decode.map5 Question
         (Decode.field "description" Decode.string)
-        (Decode.field "answer1" Answer.decoder)
-        (Decode.field "answer2" Answer.decoder)
-        (Decode.field "answer3" Answer.decoder)
-        (Decode.field "answer4" Answer.decoder)
-        (Decode.field "answer5" Answer.decoder)
+        (Decode.field "answer" Answer.decoder)
         (Decode.succeed 0)
         (Decode.succeed 1)
+        (Decode.field "id" RecordId.decoder)
 
 
 updateAnswer : Question -> Int -> Bool -> Question
 updateAnswer question ix value =
-    case ix of
-        1 ->
-            { question | answer1 = update question.answer1 value }
-
-        2 ->
-            { question | answer2 = update question.answer2 value }
-
-        3 ->
-            { question | answer3 = update question.answer3 value }
-
-        4 ->
-            { question | answer4 = update question.answer4 value }
-
-        5 ->
-            { question | answer5 = update question.answer5 value }
-
-        _ ->
-            question
+    { question | answer = Answer.update question.answer ix value }

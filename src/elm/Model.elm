@@ -1,5 +1,6 @@
 module Model exposing (..)
 
+import Answer exposing (..)
 import Backend exposing (..)
 import EmailInput exposing (..)
 import Evaluation exposing (..)
@@ -117,24 +118,26 @@ updateEmail model email =
             model
 
 
-previousQuestion : Model -> Model
-previousQuestion model =
+previousQuestion : Model -> Answer -> ( Model, Cmd Msg )
+previousQuestion model answer =
     case model of
         Answering context ->
             Answering { context | questionnaire = Questionnaire.previous context.questionnaire }
+                ! [ Backend.postAnswer context.eval.id answer ]
 
         _ ->
-            model
+            model ! []
 
 
-nextQuestion : Model -> Model
-nextQuestion model =
+nextQuestion : Model -> Answer -> ( Model, Cmd Msg )
+nextQuestion model answer =
     case model of
         Answering context ->
             Answering { context | questionnaire = Questionnaire.next context.questionnaire }
+                ! [ Backend.postAnswer context.eval.id answer ]
 
         _ ->
-            model
+            model ! []
 
 
 updateAnswer : Model -> Int -> Bool -> Model

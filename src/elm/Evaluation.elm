@@ -4,7 +4,7 @@ import Json.Decode as Decode
 
 
 type alias Evaluation =
-    { userId : Int
+    { id : Int
     , questionnaireId : Int
     }
 

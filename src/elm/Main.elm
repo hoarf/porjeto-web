@@ -50,11 +50,11 @@ update msg model =
         EvaluationCreateResult (Err error) ->
             Error (decodeError error) ! []
 
-        NextQuestion ->
-            Model.nextQuestion model ! []
+        NextQuestion answer ->
+            Model.nextQuestion model answer
 
-        PreviousQuestion ->
-            Model.previousQuestion model ! []
+        PreviousQuestion answer ->
+            Model.previousQuestion model answer
 
         BeginQuestionnaire ->
             Model.toLoadingEval model
@@ -70,6 +70,12 @@ update msg model =
 
         UpdateAnswer ix value ->
             Model.updateAnswer model ix value ! []
+
+        PostAnswerResult (Err error) ->
+            Error (decodeError error) ! []
+
+        PostAnswerResult (Ok _) ->
+            model ! []
 
 
 

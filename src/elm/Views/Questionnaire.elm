@@ -21,10 +21,10 @@ actions : Questionnaire -> Material.Model -> Html Msg
 actions questionnaire mdl =
     let
         prevButton =
-            button_ 0 "Previous" mdl PreviousQuestion
+            button_ 0 "Previous" mdl (PreviousQuestion questionnaire.current.answer)
 
         nextButton =
-            button_ 1 "Next" mdl NextQuestion
+            button_ 1 "Next" mdl (NextQuestion questionnaire.current.answer)
 
         finishButton =
             button_ 2 "Finish" mdl FinishQuestionnaire
