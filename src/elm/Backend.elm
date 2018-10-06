@@ -1,4 +1,4 @@
-module Backend exposing (getQuestionnaireQuestions, postEvaluation, putAnswer)
+module Backend exposing (getQuestionnaireQuestions, postEvaluation, putAnswer, putEvaluation)
 
 import Answer exposing (..)
 import EmailInput exposing (..)
@@ -25,9 +25,27 @@ postEvaluation user =
         )
 
 
+putEvaluation : Evaluation -> Cmd Msg
+putEvaluation evaluation =
+    Http.send EvaluationUpdateResult
+        (Http.request
+            { method = "PUT"
+            , headers = []
+            , url =
+                baseURL
+                    ++ "/evaluation/"
+                    ++ toString evaluation.id
+            , body = jsonBody (Evaluation.encode evaluation)
+            , expect = Http.expectJson <| Decode.field "data" Evaluation.decoder
+            , timeout = Nothing
+            , withCredentials = False
+            }
+        )
+
+
 putAnswer : RecordId -> Answer -> Cmd Msg
 putAnswer evaluationId answer =
-    Http.send PostAnswerResult
+    Http.send AnswerUpdateResult
         (Http.request
             { method = "PUT"
             , headers = []

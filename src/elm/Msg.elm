@@ -18,4 +18,5 @@ type Msg
     | UpdateAnswer Int Bool
     | QuestionnaireRetrieveResult (Result Http.Error Questionnaire)
     | EvaluationCreateResult (Result Http.Error Evaluation)
-    | PostAnswerResult (Result Http.Error Answer)
+    | EvaluationUpdateResult (Result Http.Error Evaluation)
+    | AnswerUpdateResult (Result Http.Error Answer)
