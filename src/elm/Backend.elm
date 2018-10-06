@@ -21,7 +21,8 @@ postEvaluation user =
         (Http.post
             (baseURL ++ "/evaluation")
             (jsonBody (EmailInput.encode user))
-            Evaluation.decoder
+         <|
+            Decode.field "data" Evaluation.decoder
         )
 
 

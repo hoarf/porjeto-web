@@ -87,7 +87,11 @@ toFinished : Model -> ( Model, Cmd Msg )
 toFinished model =
     case model of
         Answering context ->
-            Answering context ! [ Backend.putEvaluation context.eval ]
+            let
+                finishedEval =
+                    context.eval
+            in
+            Answering context ! [ Backend.putEvaluation { finishedEval | status = "finished" } ]
 
         _ ->
             model ! []
