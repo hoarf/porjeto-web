@@ -38,7 +38,7 @@ postAnswer evaluationId answer =
                     ++ "/answer/"
                     ++ toString answer.questionId
             , body = jsonBody (Answer.encode answer)
-            , expect = Http.expectJson Answer.decoder
+            , expect = Http.expectJson <| Decode.field "data" Answer.decoder
             , timeout = Nothing
             , withCredentials = False
             }

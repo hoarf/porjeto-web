@@ -27,8 +27,8 @@ default =
 decoder : Decode.Decoder Answer
 decoder =
     Decode.map2 Answer
-        (Decode.list (Decode.succeed False))
-        RecordId.decoder
+        (Decode.field "options" <| Decode.list Decode.bool)
+        (Decode.field "question_id" RecordId.decoder)
 
 
 encode : Answer -> Encode.Value
