@@ -38,12 +38,7 @@ encode answer =
             valueAt answer.values
     in
     Encode.object
-        [ ( "answer1", Encode.bool (getBool 0) )
-        , ( "answer2", Encode.bool (getBool 1) )
-        , ( "answer3", Encode.bool (getBool 2) )
-        , ( "answer4", Encode.bool (getBool 3) )
-        , ( "answer5", Encode.bool (getBool 4) )
-        ]
+        [ ( "values", Encode.list (List.map Encode.bool answer.values) ) ]
 
 
 valueAt : List Bool -> Int -> Bool

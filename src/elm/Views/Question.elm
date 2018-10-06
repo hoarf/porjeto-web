@@ -28,7 +28,7 @@ view question mdl =
 
 
 checkbox_ : Int -> Answer -> Material.Model -> Question -> Html Msg
-checkbox_ ix { values } mdl question =
+checkbox_ ix { values } mdl { options } =
     Toggles.checkbox Mdl
         [ ix ]
         mdl
@@ -36,4 +36,4 @@ checkbox_ ix { values } mdl question =
         , Toggles.value (Answer.valueAt values (ix - 1))
         , Options.onCheck (UpdateAnswer ix)
         ]
-        [ text (Question.optionAt question.options (ix - 1)) ]
+        [ text (Question.optionAt options (ix - 1)) ]

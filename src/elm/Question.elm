@@ -34,9 +34,13 @@ q1 =
 
 decoder : Decode.Decoder Question
 decoder =
+    let
+        answer =
+            Answer.default
+    in
     Decode.map6 Question
         (Decode.field "description" Decode.string)
-        (Decode.succeed Answer.default)
+        (Decode.field "id" RecordId.decoder |> Decode.andThen (\id -> Decode.succeed { answer | questionId = id }))
         (Decode.field "options" (Decode.list Decode.string))
         (Decode.succeed 0)
         (Decode.succeed 1)

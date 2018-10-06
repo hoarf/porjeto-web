@@ -28,15 +28,20 @@ postEvaluation user =
 postAnswer : RecordId -> Answer -> Cmd Msg
 postAnswer evaluationId answer =
     Http.send PostAnswerResult
-        (Http.post
-            (baseURL
-                ++ "/evaluation/"
-                ++ toString evaluationId
-                ++ "/answer/"
-                ++ toString answer.questionId
-            )
-            (jsonBody (Answer.encode answer))
-            Answer.decoder
+        (Http.request
+            { method = "PUT"
+            , headers = []
+            , url =
+                baseURL
+                    ++ "/evaluation/"
+                    ++ toString evaluationId
+                    ++ "/answer/"
+                    ++ toString answer.questionId
+            , body = jsonBody (Answer.encode answer)
+            , expect = Http.expectJson Answer.decoder
+            , timeout = Nothing
+            , withCredentials = False
+            }
         )
 
 
