@@ -1,13 +1,15 @@
-module Question exposing (Question, decoder, default, q1, updateAnswer)
+module Question exposing (Question, decoder, default, optionAt, q1, updateAnswer)
 
 import Answer exposing (..)
 import Json.Decode as Decode
+import List.Extra exposing (..)
 import RecordId exposing (..)
 
 
 type alias Question =
     { description : String
     , answer : Answer
+    , options : List String
     , order : Int
     , seconds : Int
     , id : RecordId
@@ -17,7 +19,8 @@ type alias Question =
 default : Question
 default =
     { description = "What kind of question is this?"
-    , answer = Answer [ "I dunno" ] [ False ] RecordId.default
+    , answer = Answer [ False ] RecordId.default
+    , options = [ "Is this Ok?" ]
     , order = 0
     , seconds = 0
     , id = 0
@@ -31,9 +34,10 @@ q1 =
 
 decoder : Decode.Decoder Question
 decoder =
-    Decode.map5 Question
+    Decode.map6 Question
         (Decode.field "description" Decode.string)
-        (Decode.field "answer" Answer.decoder)
+        (Decode.succeed Answer.default)
+        (Decode.field "options" (Decode.list Decode.string))
         (Decode.succeed 0)
         (Decode.succeed 1)
         (Decode.field "id" RecordId.decoder)
@@ -42,3 +46,10 @@ decoder =
 updateAnswer : Question -> Int -> Bool -> Question
 updateAnswer question ix value =
     { question | answer = Answer.update question.answer ix value }
+
+
+optionAt : List String -> Int -> String
+optionAt options ix =
+    options
+        |> getAt ix
+        |> Maybe.withDefault "[NOT FOUND]"

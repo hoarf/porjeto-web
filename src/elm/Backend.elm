@@ -45,7 +45,7 @@ getQuestionnaireQuestions questionnaireId =
     Http.send QuestionnaireRetrieveResult
         (Http.get
             (baseURL
-                ++ "/evaluation/"
+                ++ "/questionnaire/"
                 ++ toString questionnaireId
                 ++ "/questions"
             )

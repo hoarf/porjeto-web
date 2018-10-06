@@ -4,7 +4,6 @@ import Answer exposing (..)
 import Evaluation exposing (..)
 import Http
 import Material
-import Question exposing (..)
 import Questionnaire exposing (..)
 
 

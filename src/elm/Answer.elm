@@ -1,4 +1,4 @@
-module Answer exposing (Answer, decoder, descriptionAt, encode, update, valueAt)
+module Answer exposing (Answer, decoder, default, encode, update, valueAt)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -12,16 +12,21 @@ update answer ix value =
 
 
 type alias Answer =
-    { descriptions : List String
-    , values : List Bool
+    { values : List Bool
     , questionId : RecordId
+    }
+
+
+default : Answer
+default =
+    { values = [ False, False, False, False, False ]
+    , questionId = RecordId.default
     }
 
 
 decoder : Decode.Decoder Answer
 decoder =
-    Decode.map3 Answer
-        (Decode.list Decode.string)
+    Decode.map2 Answer
         (Decode.list (Decode.succeed False))
         RecordId.decoder
 
@@ -46,10 +51,3 @@ valueAt values ix =
     values
         |> getAt ix
         |> Maybe.withDefault False
-
-
-descriptionAt : List String -> Int -> String
-descriptionAt descriptions ix =
-    descriptions
-        |> getAt ix
-        |> Maybe.withDefault "[NOT FOUND]"
