@@ -1,4 +1,4 @@
-module Backend exposing (getQuestionnaireQuestions, postAnswer, postEvaluation)
+module Backend exposing (getQuestionnaireQuestions, postEvaluation, putAnswer)
 
 import Answer exposing (..)
 import EmailInput exposing (..)
@@ -25,8 +25,8 @@ postEvaluation user =
         )
 
 
-postAnswer : RecordId -> Answer -> Cmd Msg
-postAnswer evaluationId answer =
+putAnswer : RecordId -> Answer -> Cmd Msg
+putAnswer evaluationId answer =
     Http.send PostAnswerResult
         (Http.request
             { method = "PUT"

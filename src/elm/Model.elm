@@ -123,7 +123,7 @@ previousQuestion model answer =
     case model of
         Answering context ->
             Answering { context | questionnaire = Questionnaire.previous context.questionnaire }
-                ! [ Backend.postAnswer context.eval.id answer ]
+                ! [ Backend.putAnswer context.eval.id answer ]
 
         _ ->
             model ! []
@@ -134,7 +134,7 @@ nextQuestion model answer =
     case model of
         Answering context ->
             Answering { context | questionnaire = Questionnaire.next context.questionnaire }
-                ! [ Backend.postAnswer context.eval.id answer ]
+                ! [ Backend.putAnswer context.eval.id answer ]
 
         _ ->
             model ! []
