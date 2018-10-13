@@ -3,4 +3,4 @@ require( './styles/main.scss' );
 
 // inject bundled Elm app into div#main
 var Elm = require( '../elm/Main' );
-Elm.Main.embed( document.querySelector( 'body' ) );
+Elm.Main.embed(document.querySelector('body'), null);

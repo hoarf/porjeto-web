@@ -5,11 +5,13 @@ import Evaluation exposing (..)
 import Http
 import Material
 import Questionnaire exposing (..)
+import Types exposing (..)
 
 
 type Msg
     = NoOp
     | Mdl (Material.Msg Msg)
+    | SetRoute (Maybe Route)
     | NextQuestion Answer
     | PreviousQuestion Answer
     | BeginQuestionnaire

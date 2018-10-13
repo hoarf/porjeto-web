@@ -7,31 +7,37 @@ import Evaluation exposing (..)
 import Material exposing (update)
 import Msg exposing (..)
 import Questionnaire exposing (..)
+import Types exposing (..)
 import User exposing (..)
 
 
 type Model
     = Init
         { mdl : Material.Model
+        , pageState : PageState
         , email : EmailInput
         }
     | LoadingEval
         { mdl : Material.Model
+        , pageState : PageState
         , user : User
         }
     | LoadingQuestionnaire
         { mdl : Material.Model
+        , pageState : PageState
         , user : User
         , eval : Evaluation
         }
     | Answering
         { mdl : Material.Model
+        , pageState : PageState
         , user : User
         , eval : Evaluation
         , questionnaire : Questionnaire
         }
     | Finished
         { mdl : Material.Model
+        , pageState : PageState
         , user : User
         , eval : Evaluation
         , questionnaire : Questionnaire
@@ -54,12 +60,35 @@ mapName model defaultTitle questionTitle thankYouTitle =
             defaultTitle
 
 
+toNewPageState : Model -> PageState -> ( Model, Cmd Msg )
+toNewPageState model pageState =
+    case model of
+        Answering context ->
+            Answering { context | pageState = pageState } ! []
+
+        Finished context ->
+            Finished { context | pageState = pageState } ! []
+
+        Init context ->
+            Init { context | pageState = pageState } ! []
+
+        LoadingEval context ->
+            LoadingEval { context | pageState = pageState } ! []
+
+        LoadingQuestionnaire context ->
+            LoadingQuestionnaire { context | pageState = pageState } ! []
+
+        _ ->
+            model ! []
+
+
 toAnswering : Model -> Questionnaire -> Model
 toAnswering model questionnaire =
     case model of
         LoadingQuestionnaire context ->
             Answering
                 { user = context.user
+                , pageState = context.pageState
                 , mdl = context.mdl
                 , eval = context.eval
                 , questionnaire = questionnaire
@@ -76,6 +105,7 @@ toLoadingEval model =
             LoadingEval
                 { mdl = context.mdl
                 , user = { email = context.email.input }
+                , pageState = context.pageState
                 }
                 ! [ Backend.postEvaluation context.email ]
 
@@ -114,6 +144,7 @@ toLoadingQuestionnaire model evaluation =
             LoadingQuestionnaire
                 { mdl = context.mdl
                 , user = context.user
+                , pageState = context.pageState
                 , eval = evaluation
                 }
                 ! [ Backend.getQuestionnaireQuestions evaluation.questionnaireId ]

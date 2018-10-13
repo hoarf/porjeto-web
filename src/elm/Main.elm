@@ -7,25 +7,38 @@ import Json.Decode as Decode
 import Material
 import Model exposing (..)
 import Msg exposing (..)
+import Navigation exposing (Location)
+import Route exposing (..)
+import Types exposing (..)
 import Views.Model exposing (..)
 
 
 -- APP
 
 
-main : Program Never Model Msg
+main : Program () Model Msg
 main =
-    Html.program
-        { view = view
+    Navigation.programWithFlags (Route.fromLocation >> SetRoute)
+        { init = init
+        , view = view
         , update = update
-        , init =
-            Init
-                { mdl = Material.model
-                , email = EmailInput.default ""
-                }
-                ! []
         , subscriptions = \m -> Sub.none
         }
+
+
+
+-- INIT
+
+
+init : flags -> Location -> ( Model, Cmd Msg )
+init flags location =
+    setRoute (Just HomeRoute)
+        (Init
+            { mdl = Material.model
+            , pageState = Loaded HomePage
+            , email = EmailInput.default ""
+            }
+        )
 
 
 
@@ -82,6 +95,9 @@ update msg model =
 
         AnswerUpdateResult (Ok _) ->
             model ! []
+
+        SetRoute route ->
+            setRoute route model
 
 
 
