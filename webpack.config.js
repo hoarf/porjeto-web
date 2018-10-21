@@ -45,7 +45,7 @@ var common = {
     ],
     resolve: {
         modules: [path.join(__dirname, "src"), "node_modules"],
-        extensions: [".js", ".elm", ".scss", ".png"]
+        extensions: [".webpack.js", ".web.js", ".mjs", ".js", ".elm", ".scss", ".png"]
     },
     module: {
         rules: [
@@ -85,6 +85,11 @@ var common = {
                 test: /\.(jpe?g|png|gif|svg)$/i,
                 exclude: [/elm-stuff/, /node_modules/],
                 loader: "file-loader"
+            },
+            {
+                test: /\.mjs$/,
+                include: /node_modules/,
+                type: "javascript/auto",
             }
         ]
     }

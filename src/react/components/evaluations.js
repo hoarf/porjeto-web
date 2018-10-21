@@ -1,25 +1,27 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { showEvaluation } from "../actions/evaluations";
+import React from "react";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 
-const mapDispatchToProps = dispatch => {
-    return {
-        showEvaluation: evaluation => dispatch(showEvaluation(evaluation))
-    };
-};
-
-const mapStateToProps = state => {
-    return { evaluations: state.evaluations };
-};
-
-const ConnectedList = ({ evaluations }) => (
-    evaluations.map(el => (
-            <div>
-            <div>{ el.email }</div>
-            </div>
-    ))
+const Evaluations = () => (
+        <Query query={gql`
+        {
+          evaluations {
+            id
+            user {
+              email
+            }
+          }
+        }
+        `}
+        >
+        {({loading, error, data}) => {
+            if (loading) return <p>loading</p>;
+            if (error) return <p>error</p>;
+            return data.evaluations.map(({id, user}) => (
+                    <div key={id}>{user.email}</div>
+            ));
+        }}
+        </Query>
 );
-
-const Evaluations = connect(mapStateToProps)(ConnectedList);
 
 export default Evaluations;
