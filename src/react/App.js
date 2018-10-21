@@ -1,11 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import store from "./store/evaluations";
+import Evaluations from "./components/evaluations";
+import { Provider } from "react-redux";
 
 const App = () => {
   return (
-    <div>
-      <p>React here!</p>
-    </div>
+      <Provider store={store}>
+        <Evaluations/>
+      </Provider>
   );
 };
 
